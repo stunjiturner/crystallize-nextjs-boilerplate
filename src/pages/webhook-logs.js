@@ -6,7 +6,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TimeAgo from 'timeago-react';
 
 import Layout from 'components/layout';
-import { H1, H3, Outer } from 'ui';
+import { H1, H3, Outer, responsive } from 'ui';
+
+const StyledOuter = styled(Outer)`
+  --spacing: 2rem;
+
+  ${responsive.smAndLess} {
+    --spacing: 20px;
+  }
+
+  max-width: 800px;
+  padding: 50px 0 !important;
+`;
 
 const List = styled.ul`
   display: block;
@@ -23,7 +34,7 @@ const List = styled.ul`
         text-transform: uppercase;
       }
 
-      margin-left: 2rem;
+      margin: 0 var(--spacing) 15px;
 
       small {
         display: inline-block;
@@ -40,14 +51,14 @@ const List = styled.ul`
     }
 
     pre {
-      padding: 2rem;
+      padding: var(--spacing);
       font-size: 0.8em;
     }
   }
 `;
 
 const Header = styled.div`
-  padding: 0 2rem;
+  padding: 0 var(--spacing);
 `;
 
 function byDate(a, b) {
@@ -99,12 +110,7 @@ export default function Logger() {
         <link rel="stylesheet" href="/static/prism.css" />
         <script src="/static/prism.js" />
       </Head>
-      <Outer
-        css={`
-          max-width: 800px;
-          padding: 50px 0;
-        `}
-      >
+      <StyledOuter>
         <Header>
           <H1>Webhook logs</H1>
           <p>
@@ -112,11 +118,9 @@ export default function Logger() {
             <a href="https://crystallize.com">Crystallize</a>
           </p>
 
-          {entries.length === 0 ? (
-            'No webhooks have been received just yet.'
-          ) : (
+          {entries.length === 0 && (
             <div>
-              {entries.length} webhook{entries.length > 1 && 's'} received.
+              <i>No webhooks have been received just yet</i>
             </div>
           )}
         </Header>
@@ -136,7 +140,7 @@ export default function Logger() {
             </AnimatePresence>
           </List>
         )}
-      </Outer>
+      </StyledOuter>
     </Layout>
   );
 }
