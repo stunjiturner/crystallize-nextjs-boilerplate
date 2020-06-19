@@ -1,0 +1,142 @@
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import Pusher from 'pusher-js';
+import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import TimeAgo from 'timeago-react';
+
+import Layout from 'components/layout';
+import { H1, H3, Outer } from 'ui';
+
+const List = styled.ul`
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    margin: 75px 0;
+    padding: 0;
+
+    ${H3} {
+      &::first-letter {
+        text-transform: uppercase;
+      }
+
+      margin-left: 2rem;
+
+      small {
+        display: inline-block;
+        font-size: 0.6em;
+        margin-left: 15px;
+
+        &:before {
+          content: '(';
+        }
+        &:after {
+          content: ')';
+        }
+      }
+    }
+
+    pre {
+      padding: 2rem;
+      font-size: 0.8em;
+    }
+  }
+`;
+
+const Header = styled.div`
+  padding: 0 2rem;
+`;
+
+function byDate(a, b) {
+  return b.date - a.date;
+}
+
+function Entry({ entry }) {
+  return (
+    <>
+      <H3>
+        <TimeAgo datetime={entry.date} />
+        <small>{entry.date.toLocaleString()}</small>
+      </H3>
+      <pre
+        className="language-json"
+        dangerouslySetInnerHTML={{
+          __html: window.Prism.highlight(
+            JSON.stringify(entry.data, null, 3),
+            window.Prism.languages.json,
+            'json'
+          )
+        }}
+      />
+    </>
+  );
+}
+
+export default function Logger() {
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    const channels = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
+      cluster: 'eu'
+    });
+
+    const channel = channels.subscribe('webhooks');
+    channel.bind('incoming-webhook', (data) => {
+      setEntries((entries) =>
+        [{ date: new Date(), data }, ...entries].sort(byDate)
+      );
+    });
+
+    return () => channel.unsubscribe('webhooks');
+  });
+
+  return (
+    <Layout>
+      <Head>
+        <link rel="stylesheet" href="/static/prism.css" />
+        <script src="/static/prism.js" />
+      </Head>
+      <Outer
+        css={`
+          max-width: 800px;
+          padding: 50px 0;
+        `}
+      >
+        <Header>
+          <H1>Webhook logs</H1>
+          <p>
+            This page displays the incoming webhooks from{' '}
+            <a href="https://crystallize.com">Crystallize</a>
+          </p>
+
+          {entries.length === 0 ? (
+            'No webhooks have been received just yet.'
+          ) : (
+            <div>
+              {entries.length} webhook{entries.length > 1 && 's'} received.
+            </div>
+          )}
+        </Header>
+        {entries.length > 0 && (
+          <List>
+            <AnimatePresence initial={false}>
+              {entries.map((entry) => (
+                <motion.li
+                  key={entry.date}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <Entry entry={entry} />
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </List>
+        )}
+      </Outer>
+    </Layout>
+  );
+}

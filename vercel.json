@@ -9,11 +9,14 @@
     "VIPPS_MERCHANT_SERIAL": "@vipps-merchant-serial",
     "VIPPS_CLIENT_ID": "@vipps-client-id",
     "VIPPS_CLIENT_SECRET": "@vipps-client-secret",
-    "VIPPS_SUB_KEY": "@vipps-sub-key"
+    "VIPPS_SUB_KEY": "@vipps-sub-key",
+    "PUSHER_APP_ID": "@pusher-app-id",
+    "PUSHER_SECRET": "@pusher-secret"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key"
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key",
+      "NEXT_PUBLIC_PUSHER_APP_KEY": "@pusher-app-key"
     }
   }
 }
