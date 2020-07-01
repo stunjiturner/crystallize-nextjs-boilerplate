@@ -61,22 +61,55 @@ const Header = styled.div`
   padding: 0 var(--spacing);
 `;
 
+const Actions = styled.ul`
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+const Action = styled.li`
+  display: inline-block;
+  padding: 15px;
+  background: #f5f2f0;
+  border-radius: 20px;
+`;
+
+const ActionTitle = styled(Action)`
+  padding-left: var(--spacing);
+  background: transparent;
+`;
+
 function byDate(a, b) {
   return b.date - a.date;
 }
 
 function Entry({ entry }) {
+  const { payload, actions } = entry.data;
+
   return (
     <>
       <H3>
         <TimeAgo datetime={entry.date} />
         <small>{entry.date.toLocaleString()}</small>
       </H3>
+      <Actions>
+        {actions.length > 0 ? (
+          <>
+            <ActionTitle>Actions performed:</ActionTitle>
+            {actions.map((action) => (
+              <Action key={action}>{action}</Action>
+            ))}
+          </>
+        ) : (
+          <ActionTitle>No actions performed</ActionTitle>
+        )}
+      </Actions>
       <pre
         className="language-json"
         dangerouslySetInnerHTML={{
           __html: window.Prism.highlight(
-            JSON.stringify(entry.data, null, 3),
+            JSON.stringify(payload, null, 3),
             window.Prism.languages.json,
             'json'
           )
