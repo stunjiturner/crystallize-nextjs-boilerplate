@@ -1,13 +1,5 @@
-import Pusher from 'pusher';
 import { getClient } from 'lib-api/payment-providers/vipps';
 import { updateCrystallizeOrder } from 'lib-api/crystallize/order';
-
-const channels = new Pusher({
-  appId: process.env.PUSHER_APP_ID,
-  key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-  secret: process.env.PUSHER_SECRET,
-  cluster: 'eu'
-});
 
 export default async (req, res) => {
   const {
@@ -84,15 +76,6 @@ export default async (req, res) => {
         });
     }
   }
-
-  channels.trigger(
-    'webhooks',
-    'incoming-webhook',
-    JSON.stringify({
-      payload: req.body,
-      actions
-    })
-  );
 
   res.send('received');
 };
