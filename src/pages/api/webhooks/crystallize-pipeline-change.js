@@ -1,4 +1,6 @@
 import Pusher from 'pusher';
+import { getClient } from 'lib-api/payment-providers/vipps';
+import { updateCrystallizeOrder } from 'lib-api/crystallize/order';
 
 const channels = new Pusher({
   appId: process.env.PUSHER_APP_ID,
@@ -7,7 +9,7 @@ const channels = new Pusher({
   cluster: 'eu'
 });
 
-export default (req, res) => {
+export default async (req, res) => {
   const {
     orders: { get: order }
   } = req.body;
@@ -41,6 +43,27 @@ export default (req, res) => {
         actions.push('Capture amount from customer');
         actions.push('Congratulate staff on completed sale');
         // Vipps capture
+
+        await getClient().capture({
+          orderId: order.id,
+          body: {
+            merchantInfo: {
+              merchantSerialNumber: process.env.VIPPS_MERCHANT_SERIAL
+            },
+            transaction: {
+              amount: order.total.gross * 100,
+              transactionText: 'Crystallize Boilerplate Test Transaction'
+            }
+          }
+        });
+
+        await updateCrystallizeOrder({
+          id: order.id,
+          additionalInformation: JSON.stringify({
+            status: 'CAPTURED'
+          })
+        });
+
         break;
     }
   }
