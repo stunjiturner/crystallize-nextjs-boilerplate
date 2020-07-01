@@ -40,10 +40,7 @@ export default async (req, res) => {
         actions.push('Inform the user: ready for pickup');
         break;
       case 'Delivered':
-        actions.push('Capture amount from customer');
-        actions.push('Congratulate staff on completed sale');
         // Vipps capture
-
         await getClient().capture({
           orderId: order.id,
           body: {
@@ -56,6 +53,7 @@ export default async (req, res) => {
             }
           }
         });
+        actions.push(`Captured ${order.total.gross} from customer`);
 
         await updateCrystallizeOrder({
           id: order.id,
@@ -63,6 +61,8 @@ export default async (req, res) => {
             status: 'CAPTURED'
           })
         });
+
+        actions.push('Congratulate staff on completed sale');
 
         break;
     }
