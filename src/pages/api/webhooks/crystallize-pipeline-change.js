@@ -53,7 +53,6 @@ export default async (req, res) => {
             }
           }
         });
-        actions.push(`Captured ${order.total.gross} from customer`);
 
         await updateCrystallizeOrder({
           id: order.id,
@@ -62,9 +61,27 @@ export default async (req, res) => {
           })
         });
 
-        actions.push('Congratulate staff on completed sale');
-
         break;
+      case 'Cancelled':
+        await getClient().refund({
+          orderId: order.id,
+          body: {
+            merchantInfo: {
+              merchantSerialNumber: process.env.VIPPS_MERCHANT_SERIAL
+            },
+            transaction: {
+              amount: order.total.gross * 100,
+              transactionText: 'Crystallize Boilerplate Test Refund'
+            }
+          }
+        });
+
+        await updateCrystallizeOrder({
+          id: order.id,
+          additionalInformation: JSON.stringify({
+            status: 'REFUNDED'
+          })
+        });
     }
   }
 
