@@ -6,7 +6,10 @@ import { responsive } from 'ui';
 export const Outer = styled.header`
   text-align: center;
   padding: 20px 75px;
-  max-width: 1600px;
+  //max-width: 1600px;
+  //background-color: var(--color-header-background) !important;
+  background-color: var(--color-header-background);
+
   display: flex;
   justify-content: flex-start;
   align-items: center;

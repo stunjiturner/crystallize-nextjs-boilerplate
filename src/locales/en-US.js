@@ -77,7 +77,7 @@ export default {
     },
     layout: {
       menu: 'Menu',
-      ecomBy: 'eCommerce by',
+      ecomBy: 'Commerce by',
       loadingVideo: 'Loading video'
     }
   }

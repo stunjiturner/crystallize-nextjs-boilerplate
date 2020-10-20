@@ -22,6 +22,15 @@ export const MediaWrapper = styled(WidescreenRatio)`
 
 export const MediaInner = styled.div`
   flex: 1 1 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; 
+  width: 100%;
+  color: white;
+
+  text-align: center; 
+  background-color: rgba(33, 33, 33, .3); 
+  align-items: center;
 `;
 
 export const Img = styled(Image)`
@@ -40,17 +49,14 @@ export const Img = styled(Image)`
 `;
 
 export const Text = styled.div`
-  flex: 1 1 auto;
-  color: var(--color-text-main);
-  background: var(--color-box-background);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding: 3em var(--content-padding);
+  position: absolute;
+  margin: 0;
+  left: 0;                       /* horizontal alignment */
+    top: 50%; 
+
 
   h3 {
-    font-size: 1.6em;
+    font-size: 4.6em;
     color: inherit;
     font-family: 'Roboto Slab', 'Roboto', sans-serif;
     margin: 0;

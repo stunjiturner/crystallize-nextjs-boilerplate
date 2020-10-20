@@ -27,6 +27,11 @@ export default function Header({ simple, preview }) {
 
   const [navOpen, setNavOpen] = useState(false);
 
+    //// HACK:
+  var menuItemsOnlyFolders = mainNavigation.filter((category) => {
+    return category.type === 'folder';
+  });
+
   return (
     <>
       {preview && (
@@ -42,13 +47,13 @@ export default function Header({ simple, preview }) {
         <Link href="/">
           <a>
             <Logo>
-              <img src="/static/shop-logo.svg" alt="" />
+              <img src="/static/shop-trbz-logo.svg" alt="" />
             </Logo>
           </a>
         </Link>
         <Nav open={navOpen}>
           <NavList>
-            {mainNavigation.map((category) => (
+            {menuItemsOnlyFolders.map((category) => (
               <NavListItem key={category.path}>
                 <Link as={category.path} href="/[...catalogue]">
                   <a onClick={() => setNavOpen(false)}>{category.name}</a>

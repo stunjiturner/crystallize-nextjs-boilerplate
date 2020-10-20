@@ -65,14 +65,18 @@ export default function DocumentItem({ data, colSpan = '4' }) {
     <Link as={path} href="/[...catalogue]" passHref>
       <Outer span={colSpan}>
         <MediaWrapper>
-          <MediaInner>{media && media}</MediaInner>
-        </MediaWrapper>
-        <Text>
-          <H3>{name}</H3>
-          <Description>
+          <MediaInner>{media && media}
+
+          <Text>
+            <H3>{name} xxxx</H3>
+            <Description>
             <ContentTransformer {...description?.content?.json} />
           </Description>
         </Text>
+          </MediaInner>
+
+        </MediaWrapper>
+
       </Outer>
     </Link>
   );

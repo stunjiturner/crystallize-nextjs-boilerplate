@@ -54,7 +54,7 @@ export const Price = styled.span`
 
 export const Outer = styled.a`
   position: relative;
-  background: var(--color-box-background);
+  //background: var(--color-box-background);
   height: 100%;
   display: flex;
   padding: 0 50px;
